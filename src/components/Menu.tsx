@@ -1,4 +1,6 @@
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonContent,
   IonIcon,
   IonItem,
@@ -23,44 +25,38 @@ interface AppPage {
 
 const appPages: AppPage[] = [
   {
-    title: 'Inbox',
-    url: '/page/Inbox',
+    title: 'Database',
+    url: '/page/Database',
     iosIcon: mailOutline,
     mdIcon: mailSharp
   },
   {
-    title: 'Outbox',
-    url: '/page/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp
+    title: 'Students',
+    url: '/page/Students',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
   },
   {
-    title: 'Favorites',
-    url: '/page/Favorites',
-    iosIcon: heartOutline,
-    mdIcon: heartSharp
+    title: 'Student Create',
+    url: '/page/StudentCreate',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
   },
   {
-    title: 'Archived',
-    url: '/page/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp
+    title: 'Professors',
+    url: '/page/Professors',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
   },
   {
-    title: 'Trash',
-    url: '/page/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp
+    title: 'Professor Create',
+    url: '/page/ProfessorCreate',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
   },
-  {
-    title: 'Spam',
-    url: '/page/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp
-  }
 ];
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+const labels = ['Family', 'Friends'];
 
 const Menu: React.FC = () => {
   const location = useLocation();
@@ -82,7 +78,26 @@ const Menu: React.FC = () => {
             );
           })}
         </IonList>
-
+        <IonAccordionGroup animated={true}>
+          <IonAccordion>
+            <IonItem slot="header">
+              <IonIcon slot="start" ios={mailOutline} md={mailSharp} />
+              <IonLabel>Students</IonLabel>
+            </IonItem>
+            <IonList slot="content" id="submenu-list">
+              {appPages.map((appPage, index) => {
+                return (
+                    <IonMenuToggle key={index} autoHide={false}>
+                      <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
+                        <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon} />
+                        <IonLabel>{appPage.title}</IonLabel>
+                      </IonItem>
+                    </IonMenuToggle>
+                );
+              })}
+            </IonList>
+          </IonAccordion>
+        </IonAccordionGroup>
         <IonList id="labels-list">
           <IonListHeader>Labels</IonListHeader>
           {labels.map((label, index) => (

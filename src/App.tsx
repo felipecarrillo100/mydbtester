@@ -22,10 +22,32 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Main from "./pages/Main";
+import {useEffect, useState} from "react";
+import {DataBaseManager} from "./services/DataBaseManager";
+import {StudentsPage} from "./pages/StudentsPage";
+import {ProfessorsPage} from "./pages/ProfessorsPage";
+import {StudentsCreatePage} from "./pages/StudentsCreatePage";
+import {ProfessorCreatePage} from "./pages/ProfessorCreatePage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [globalDBManager, setGlobalDBManager] = useState(null as DataBaseManager | null);
+  useEffect(()=>{
+    console.log("Will init!");
+    const databaseManager = new DataBaseManager("mydb9");
+    databaseManager.init().then((dbManager) => {
+      if (dbManager) {
+        setGlobalDBManager(dbManager)
+      }
+    })
+    return () => {
+      // Will unmount
+      databaseManager.destroy();
+      console.log("Will destroy!");
+    }
+  },[])
   return (
     <IonApp>
       <IonReactRouter>
@@ -33,10 +55,28 @@ const App: React.FC = () => {
           <Menu />
           <IonRouterOutlet id="main">
             <Route path="/" exact={true}>
-              <Redirect to="/page/Inbox" />
+              <Redirect to="/page/Database" />
             </Route>
-            <Route path="/page/:name" exact={true}>
-              <Page />
+            <Route path="/page/Database" exact={true} >
+              <Main dbManager={globalDBManager}/>
+            </Route>
+            <Route path="/page/Students" exact={true} >
+              <StudentsPage dbManager={globalDBManager}/>
+            </Route>
+            <Route path="/page/StudentCreate" exact={true} >
+              <StudentsCreatePage dbManager={globalDBManager} key="exact"/>
+            </Route>
+            <Route path="/page/StudentCreate/:id" exact={true} >
+              <StudentsCreatePage dbManager={globalDBManager} key="withid"/>
+            </Route>
+            <Route path="/page/Professors" exact={true} >
+              <ProfessorsPage dbManager={globalDBManager}/>
+            </Route>
+            <Route path="/page/ProfessorCreate" exact={true} >
+              <ProfessorCreatePage dbManager={globalDBManager} key="exact2"/>
+            </Route>
+            <Route path="/page/ProfessorCreate/:id" exact={true} >
+              <ProfessorCreatePage dbManager={globalDBManager} key="withid2"/>
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>
